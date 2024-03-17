@@ -1,53 +1,65 @@
 import 'react-native-reanimated';
 import 'react-native-gesture-handler';
 
+import { useState, useEffect } from 'react';
+import { View, useColorScheme, StyleSheet, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { View, useColorScheme, StyleSheet } from 'react-native';
-import { useRef } from 'react';
+import * as NavigationBar from 'expo-navigation-bar';
 
-import { MotiView } from 'moti';
+import { ActivityIndicator } from './src/components/ActivityIndicator';
+import { DropTitles } from './src/components/DropTitles';
+
+const _colors = {
+   light: {
+      background: '#fff',
+      font: '#000',
+      ui: '#000',
+   },
+   dark: {
+      background: '#000',
+      font: '#fff',
+      ui: '#fff',
+   },
+};
+
+const dropTitleList = [
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+   'drop title',
+];
 
 export default function App() {
+   const [loading, setLoading] = useState(true);
    const _scheme = useColorScheme();
-   const colors = useRef({
-      background: _scheme === 'light' ? '#fff' : '#000',
-      font: _scheme === 'light' ? '#000' : '#fff',
-      ui: _scheme === 'light' ? '#000' : '#fff',
-   });
+
+   NavigationBar.setBackgroundColorAsync(_scheme === 'light' ? _colors.light.background : _colors.dark.background);
+   NavigationBar.setButtonStyleAsync(_scheme);
+
+   useEffect(() => {
+      setTimeout(() => setLoading(false), 2000);
+   }, []);
 
    return (
-      <View style={[styles.container, { backgroundColor: colors.current.background }]}>
-         <MotiView
-            from={{
-               width: 100,
-               height: 100,
-               borderRadius: 100 / 2,
-               borderWidth: 0,
-               opacity: 0,
-            }}
-            animate={{
-               width: 100 + 20,
-               height: 100 + 20,
-               borderRadius: (100 + 20) / 2,
-               borderWidth: 100 / 10,
-               opacity: 1,
-            }}
-            transition={{
-               type: 'timing',
-               duration: 1000,
-               loop: true,
-            }}
-            style={{
-               width: 100,
-               height: 100,
-               borderRadius: 100 / 2,
-               borderWidth: 100 / 10,
-               borderColor: colors.current.ui,
-               shadowColor: colors.current.ui,
-               shadowOffset: { width: 0, height: 0 },
-               shadowOpacity: 1,
-               shadowRadius: 10,
-            }}></MotiView>
+      <View style={[styles.container, { backgroundColor: _scheme === 'light' ? _colors.light.background : _colors.dark.background }]}>
+         {loading ? <ActivityIndicator _colors={_colors} size={100} /> : <DropTitles _colors={_colors} dropTitles={dropTitleList} />}
          <StatusBar style="auto" />
       </View>
    );
